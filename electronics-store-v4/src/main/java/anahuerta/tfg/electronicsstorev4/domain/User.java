@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import anahuerta.tfg.electronicsstorev4.domain.Orders;
+
 @Entity
 public class User {
 	@Id
@@ -28,8 +30,11 @@ public class User {
 	@Column(name = "email")
 	public String email;
 	
+	@Column(name = "password")
+	public String password;
+	
 	@OneToMany(cascade = CascadeType.ALL)
-	private List<Order> orders;
+    public List<Orders> orders;
 	
 	public User() {}
 	

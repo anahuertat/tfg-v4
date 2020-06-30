@@ -3,12 +3,13 @@ package anahuerta.tfg.electronicsstorev4.domain;
 import java.util.Objects;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import anahuerta.tfg.electronicsstorev4.domain.Category;
 import anahuerta.tfg.electronicsstorev4.domain.Component;
 
+@Entity
 public class Component {
 	@Id
 	@GeneratedValue
@@ -16,7 +17,7 @@ public class Component {
 	public Integer reference;
 	
 	@Column(name = "category")
-	public Category category;
+	public String category;
 	
 	@Column(name = "name")
 	public String name;
@@ -27,9 +28,15 @@ public class Component {
 	@Column(name = "stock")
 	public Integer stock;
 	
-	public Component() {}
+	public Component() {
+		reference = null;
+		category = null;
+		name = null;
+		price = null;
+		stock = null;
+	}
 	
-	public Category getCategory() {
+	public String getCategory() {
 		return category;
 	}
 	

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cart {
-	
 	List<Integer> cartItemsReferences = new ArrayList<Integer>();
     
 	public void addToCartByRef(Integer reference) {
@@ -14,6 +13,4 @@ public class Cart {
 	public List<Integer> getCartItemsReferences(){
 		return cartItemsReferences;
 	}
-	
-
 }

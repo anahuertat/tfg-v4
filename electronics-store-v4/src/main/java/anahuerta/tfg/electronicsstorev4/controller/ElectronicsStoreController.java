@@ -10,18 +10,38 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import anahuerta.tfg.electronicsstorev4.domain.request.RequestLogin;
+import anahuerta.tfg.electronicsstorev4.domain.request.RequestSignUp;
 import anahuerta.tfg.electronicsstorev4.domain.Cart;
 import anahuerta.tfg.electronicsstorev4.domain.Component;
+import anahuerta.tfg.electronicsstorev4.domain.User;
 import anahuerta.tfg.electronicsstorev4.service.ElectronicsStoreService;
 
 @RestController
 @RequestMapping("/store")
 public class ElectronicsStoreController {
 	private final ElectronicsStoreService storeService;
+	private User user;
 	
 	@Autowired
 	public ElectronicsStoreController(final ElectronicsStoreService storeService) {
 		this.storeService = storeService;
+	}
+	
+	@PostMapping("/login")
+	public boolean login(@RequestBody RequestLogin requestLogin) {
+		user = storeService.login(requestLogin.getEmail(), requestLogin.getPassword());
+		if(user!=null) {
+			System.out.println(user.getUserId());
+			return true;
+		}
+		return false;
+	}
+	
+	@PostMapping("/sign")
+	public int signUp(@RequestBody RequestSignUp requestSignUp) {
+		storeService.createUser(requestSignUp);
+		return 0;
 	}
 	
 	@GetMapping("/cart")
