@@ -24,7 +24,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
 	}
 
 	@Transactional
-	public int createUser(RequestSignUp requestSignUp) {
+	public void createUser(RequestSignUp requestSignUp) {
 		entityManager.joinTransaction();
 		entityManager.createNativeQuery("INSERT INTO User (address, email, last_name, name, password) VALUES (?,?,?,?,?)")
 			.setParameter(1, requestSignUp.getAddress())
@@ -33,8 +33,18 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
 			.setParameter(4, requestSignUp.getName())
 			.setParameter(5, requestSignUp.getPassword())
 			.executeUpdate();
-		return 0;
 	}
+
+	@Transactional
+	public void createUserOrder(Integer user_id, Integer order_number) {
+		entityManager.joinTransaction();
+		entityManager.createNativeQuery("INSERT INTO user_orders VALUES (?,?)")
+			.setParameter(1, user_id)
+			.setParameter(2, order_number)
+			.executeUpdate();
+		
+	}
+	
 	
 
 }

@@ -5,5 +5,5 @@ public interface ComponentRepositoryCustom {
 	int getStockByReference(Integer reference);
 	
 	//update stock
-	void updateStockByReference(Integer reference, int stock);
+	void updateStockByReference(Integer reference, Integer stock);
 }

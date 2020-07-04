@@ -21,7 +21,7 @@ import anahuerta.tfg.electronicsstorev4.service.ElectronicsStoreService;
 @RequestMapping("/store")
 public class ElectronicsStoreController {
 	private final ElectronicsStoreService storeService;
-	private User user;
+	private User user = null;
 	
 	@Autowired
 	public ElectronicsStoreController(final ElectronicsStoreService storeService) {
@@ -39,9 +39,15 @@ public class ElectronicsStoreController {
 	}
 	
 	@PostMapping("/sign")
-	public int signUp(@RequestBody RequestSignUp requestSignUp) {
+	public boolean signUp(@RequestBody RequestSignUp requestSignUp) {
 		storeService.createUser(requestSignUp);
-		return 0;
+		user = storeService.login(requestSignUp.getEmail(), requestSignUp.getPassword());
+		if(user!=null) {
+			System.out.println(user.getUserId());
+			return true;
+		}
+		return false;
+		
 	}
 	
 	@GetMapping("/cart")
@@ -62,9 +68,7 @@ public class ElectronicsStoreController {
 		
 	@PatchMapping("/checkout/confirmation")
 	public void confirm() {
-		storeService.confirm();
+		storeService.confirm(user);
 	}
 	
-	
-
 }

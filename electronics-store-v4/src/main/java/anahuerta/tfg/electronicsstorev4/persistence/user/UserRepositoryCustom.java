@@ -10,5 +10,7 @@ public interface UserRepositoryCustom {
 	
 	List<Orders> getOrdersById(Integer user_id);
 	
-	int createUser(RequestSignUp requestSignUp);
+	void createUser(RequestSignUp requestSignUp);
+	
+	void createUserOrder(Integer user_id, Integer order_number);
 }

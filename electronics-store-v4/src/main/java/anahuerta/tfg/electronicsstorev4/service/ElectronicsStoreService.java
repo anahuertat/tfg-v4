@@ -18,9 +18,11 @@ public interface ElectronicsStoreService {
 	
 	List<Component> getCartItems();
 	
-	void confirm();
+	void confirm(User user);
 
 	User login(String email, String password);
 
 	void createUser(RequestSignUp requestSignUp);
+	
+	
 }

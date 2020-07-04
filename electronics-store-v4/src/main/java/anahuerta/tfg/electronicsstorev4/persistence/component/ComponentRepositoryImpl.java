@@ -3,6 +3,7 @@ package anahuerta.tfg.electronicsstorev4.persistence.component;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.transaction.Transactional;
 
 public class ComponentRepositoryImpl implements ComponentRepositoryCustom{
 	@PersistenceContext
@@ -16,10 +17,13 @@ public class ComponentRepositoryImpl implements ComponentRepositoryCustom{
 	}
 
 	//update stock of a component
-	public void updateStockByReference(Integer reference, int stock) {
-		Query query = entityManager.createNativeQuery("UPDATE Component c set c.stock = ? where reference = ?");
-		query.setParameter(1, stock);
-		query.setParameter(2, reference);
+	@Transactional
+	public void updateStockByReference(Integer reference, Integer stock) {
+		entityManager.joinTransaction();
+		entityManager.createNativeQuery("UPDATE Component c set c.stock = ? where reference = ?")
+			.setParameter(1, stock)
+			.setParameter(2, reference)
+			.executeUpdate();
 	}
 
 }

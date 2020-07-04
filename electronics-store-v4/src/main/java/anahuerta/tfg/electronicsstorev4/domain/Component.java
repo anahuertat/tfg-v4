@@ -28,13 +28,7 @@ public class Component {
 	@Column(name = "stock")
 	public Integer stock;
 	
-	public Component() {
-		reference = null;
-		category = null;
-		name = null;
-		price = null;
-		stock = null;
-	}
+	public Component() {}
 	
 	public String getCategory() {
 		return category;
