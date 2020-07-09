@@ -6,14 +6,10 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
-import org.hibernate.transform.Transformers;
-
 import anahuerta.tfg.electronicsstorev4.domain.Orders;
-import anahuerta.tfg.electronicsstorev4.domain.User;
 import anahuerta.tfg.electronicsstorev4.domain.request.RequestOrder;
 
 public class OrdersRepositoryImpl implements OrdersRepositoryCustom{
