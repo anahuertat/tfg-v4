@@ -5,9 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.criteria.Order;
-
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import anahuerta.tfg.electronicsstorev4.domain.Cart;
@@ -16,6 +13,10 @@ import anahuerta.tfg.electronicsstorev4.domain.Orders;
 import anahuerta.tfg.electronicsstorev4.domain.User;
 import anahuerta.tfg.electronicsstorev4.domain.request.RequestOrder;
 import anahuerta.tfg.electronicsstorev4.domain.request.RequestSignUp;
+import anahuerta.tfg.electronicsstorev4.event.EventDispatcher;
+import anahuerta.tfg.electronicsstorev4.event.OrderCreatedEvent;
+//import anahuerta.tfg.electronicsstorev4.event.EventDispatcher;
+//import anahuerta.tfg.electronicsstorev4.event.OrderCreatedEvent;
 import anahuerta.tfg.electronicsstorev4.persistence.component.ComponentRepository;
 import anahuerta.tfg.electronicsstorev4.persistence.orders.OrdersRepository;
 import anahuerta.tfg.electronicsstorev4.persistence.user.UserRepository;
@@ -28,11 +29,14 @@ public class ElectronicsStoreServiceImpl implements ElectronicsStoreService{
 	UserRepository userRepository;
 	ComponentRepository componentRepository;
 	
+	private EventDispatcher eventDispatcher;
+	
 	public ElectronicsStoreServiceImpl(OrdersRepository orderRepository, 
-			UserRepository userRepository, ComponentRepository componentRepository) {
+			UserRepository userRepository, ComponentRepository componentRepository, final EventDispatcher eventDispatcher) {
 		this.userRepository = userRepository;
 		this.orderRepository = orderRepository;
 		this.componentRepository = componentRepository;
+		this.eventDispatcher = eventDispatcher;
 	}
 	
 	public boolean addToCart(Integer reference) {
@@ -67,10 +71,12 @@ public class ElectronicsStoreServiceImpl implements ElectronicsStoreService{
 		List<Component> items = getCartItems();
 		Iterator<Component> it = items.iterator();
 		List<Integer> references = new ArrayList<>();
+		int points=0;
 		while(it.hasNext()) {
 			Component c = it.next();
 			references.add(c.getReference());
 			componentRepository.updateStockByReference(c.getReference(), new Integer(c.getStock().intValue()-1));
+			points =  (int) (points + c.getPrice()*1000);
 		}
 		RequestOrder requestOrder = new RequestOrder(user.getAddress(), user.getUserId());
 		orderRepository.createOrders(requestOrder);
@@ -78,6 +84,9 @@ public class ElectronicsStoreServiceImpl implements ElectronicsStoreService{
 		Integer order_number = userOrders.get(0).getOrderNumber();
 		orderRepository.addReferencesToOrder(order_number, references);
 		userRepository.createUserOrder(user.getUserId(), order_number);
+		
+		//communicates order created via event
+		eventDispatcher.send(new OrderCreatedEvent(order_number, user.getUserId(), points));
 		
 	}
 
